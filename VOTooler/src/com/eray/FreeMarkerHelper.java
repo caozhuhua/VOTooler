@@ -80,7 +80,7 @@ public class FreeMarkerHelper {
 			}
 			fieldList.add(b);
 		}
-		String defaultPackageString = "com.eray.excel.vo";
+		String defaultPackageString = "com.eray.base.net.socket.vo";
 		String packageFolder = defaultPackageString.replace(".", "\\")+"\\";
 		File asFile = new File(outPutBasePath+"DataVO\\"+AS_FOLDER+"\\"+packageFolder+classNameString+".as");
 		if(asFile.exists()){
@@ -244,12 +244,12 @@ public class FreeMarkerHelper {
 				Writer writer;
 				try{
 					String packageFolder = defaultPackageString.replace(".", "\\")+"\\";
-					File asDic = new File(basePath+"DataVO\\"+packageFolder);
+					File asDic = new File(basePath+"DataVO\\c\\"+packageFolder);
 					if(!asDic.exists()){
 						asDic.mkdirs();
 					}
 					writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(basePath+"DataVO\\"+packageFolder+classNameStr+".h"), "UTF-8"));
+					new FileOutputStream(basePath+"DataVO\\c\\"+packageFolder+classNameStr+".h"), "UTF-8"));
 					template.process(root, writer);
 					writer.flush();
 					writer.close();
@@ -265,5 +265,45 @@ public class FreeMarkerHelper {
 			System.out.println(e.toString());
 		}
 	}
+	public static void createAS3MessageManager(InputArgsVO itvo,ArrayList<MessageIdSheetBean> fieldList){
+		try{
+			String basePath = itvo.outPutPath;
+			String classNameStr = "ErayMessageManager";
+			String defaultPackageString = "com.eray.base.net.socket";
+			Configuration freemarkerCfg = FreemarkerConfiguration.getConfiguation();
+			freemarkerCfg.setDirectoryForTemplateLoading(new File("./"));
+			freemarkerCfg.setEncoding(Locale.getDefault(), "gb2312");
+			Template template;
+			try{
+				template = freemarkerCfg.getTemplate("AS3MessageManager.ftl",Locale.ENGLISH);
+				template.setEncoding("UTF-8");
+				HashMap<Object, Object> root = new HashMap<Object, Object>();
+				root.put("ClassName", classNameStr);
+				root.put("FieldList", fieldList);
+				Writer writer;
+				try{
+					String packageFolder = defaultPackageString.replace(".", "\\")+"\\";
+					File asDic = new File(basePath+"DataVO\\"+AS_FOLDER+"\\"+packageFolder);
+					if(!asDic.exists()){
+						asDic.mkdirs();
+					}
+					writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(basePath+"DataVO\\"+AS_FOLDER+"\\"+packageFolder+classNameStr+".as"), "UTF-8"));
+					template.process(root, writer);
+					writer.flush();
+					writer.close();
+				}
+				catch(Exception e){
+					System.out.println(e.toString());
+				}
+			}catch(Exception e){
+				System.out.print(e.toString());
+			}
+		}
+		catch(Exception e){
+			System.out.println(e.toString());
+		}
+	}
+	
 	
 }

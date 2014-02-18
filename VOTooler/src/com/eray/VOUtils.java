@@ -79,6 +79,9 @@ public class VOUtils {
 		if(itvo.outCAddClass){
 			FreeMarkerHelper.createMessageDelegateFile(itvo, fieldList);
 		}
+		if(itvo.outASClass){
+			FreeMarkerHelper.createAS3MessageManager(itvo, fieldList);
+		}
 	}
 	
 	public static List<String> getAllFiles(String absDir) {

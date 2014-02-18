@@ -1,8 +1,9 @@
-package com.eray.excel.vo
+package com.eray.base.net.socket.vo
 {
 	import flash.utils.ByteArray;
+	import com.eray.base.utils.Utilities;
 <#list TypeList as field>
-	import com.eray.excel.vo.${field.includeFileName}
+	import com.eray.base.net.socket.vo.${field.includeFileName}
 </#list>
 	public class ${ClassName}
 	{
@@ -51,7 +52,7 @@ package com.eray.excel.vo
 		<#elseif field.type == "Number">
 			vo.${field.fieldName} =  ba.getLong();
 		<#elseif field.type == "String">
-			vo.${field.fieldName} =  Utilities.UnicodeToString(ba,${field.count}/2)
+			vo.${field.fieldName} =  Utilities.UnicodeToString(ba,vo.${field.count}/2)
 		<#elseif field.type == "Object">
 			<#list field.voLogic as fd>
 			__type = ba.readUnsignedInt();
@@ -69,9 +70,9 @@ package com.eray.excel.vo
 			</#list>
 		<#else>
 		<#if field.count != "">
-			for(i=0;i<${field.count};++i){
-				this._${field.fieldName} = [];
-				this._${field.fieldName}.push(${field.type}.parse(ba));
+			vo.${field.fieldName} = [];
+			for(i=0;i<vo.${field.count};++i){
+				vo.${field.fieldName}.push(${field.type}.parse(ba));
 			}
 		</#if>
 	</#if>
