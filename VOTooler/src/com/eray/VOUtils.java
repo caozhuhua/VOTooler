@@ -6,13 +6,22 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 
+import com.eray.vo.SheetVO;
+
 
 
 public class VOUtils {
 	private InputArgsVO itvo = null;
+	
 	public void parse(InputArgsVO itv) throws Exception{
 		itvo =  itv;
+		if(itvo.outASClass&&itvo.outCAddClass){
+			System.out.println("不需要作任何处理打包操作");
+			return;
+		}
 		List<String> list = getAllFiles(itv.path);
+		ArrayList<SheetVO> sheetVOList = ExcelUtils.getSheetList(list);
+		DataModel.getInstance().setSheetVOList(sheetVOList);
 		for (String s : list) {
 			if (FilenameUtils.isExtension(s, "xls")) {
 				System.out.println("file:" + s);
@@ -22,7 +31,9 @@ public class VOUtils {
 	}
 	private void tranformExcel(String configExcelPath) throws Exception{
 		//String[] sheetNames = ExcelUtils.getSheetName(configExcelPath);
-		String[][] data = ExcelUtils.getSheetData(configExcelPath, "MessageIdSheet");
+
+//		String xlsName = FilenameUtils.getBaseName(configExcelPath);
+		String[][] data = ExcelUtils.getSheetData(configExcelPath, SheetDataItemLabel.MESSAGE_ID_SHEET_NAME);
 		if (data.length == 0) {
 			return;
 		}
@@ -37,16 +48,16 @@ public class VOUtils {
 			MessageIdSheetBean bb = new MessageIdSheetBean();
 			for (int j = 0; j < valueList.length; j++) {
 				String typeName = valueList[j];
-				if("MessageId".equalsIgnoreCase(typeName)){
+				if(SheetDataItemLabel.MESSAGE_ID_ITEM_NAME.equalsIgnoreCase(typeName)){
 					MessageId = data[i][j];
-				}else if("MessageVO".equalsIgnoreCase(typeName)){
+				}else if(SheetDataItemLabel.MESSAGE_ID_VO_NAME.equalsIgnoreCase(typeName)){
 					messageClassName = data[i][j];
 					if(!"".equalsIgnoreCase(messageClassName)){
 						voData = ExcelUtils.getSheetData(configExcelPath, data[i][j]);
 					}
-				}else if("ActionHandler".equalsIgnoreCase(typeName)){
+				}else if(SheetDataItemLabel.MESSAGE_ID_HANDLER.equalsIgnoreCase(typeName)){
 					ActionHandler = data[i][j];
-				}else if("MessageIDStr".equalsIgnoreCase(typeName)){
+				}else if(SheetDataItemLabel.MESSAGE_ID_STR_KEY.equalsIgnoreCase(typeName)){
 					MessageIDStr = data[i][j];
 				}
 				
@@ -58,9 +69,16 @@ public class VOUtils {
 				bb.setMessageIDStr(MessageIDStr);
 				fieldList.add(bb);
 			}
-			FreeMarkerHelper.createVOFactory(configExcelPath,messageClassName, voData, itvo.outPutPath);
+			if(itvo.outCAddClass){
+				FreeMarkerHelper.createVOFactory(configExcelPath,messageClassName, voData, itvo.outPutPath);
+			}
+			if(itvo.outASClass){
+				FreeMarkerHelper.createAS3VO(configExcelPath, messageClassName, voData, itvo.outPutPath);
+			}
 		}
-		FreeMarkerHelper.createMessageDelegateFile(itvo, fieldList);
+		if(itvo.outCAddClass){
+			FreeMarkerHelper.createMessageDelegateFile(itvo, fieldList);
+		}
 	}
 	
 	public static List<String> getAllFiles(String absDir) {
@@ -76,7 +94,6 @@ public class VOUtils {
 				files.addAll(getAllFiles(name));
 			}
 		}
-
 		return files;
 	}
 }

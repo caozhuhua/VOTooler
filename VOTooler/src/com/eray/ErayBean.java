@@ -1,10 +1,26 @@
 package com.eray;
 
+import java.util.ArrayList;
+
 public class ErayBean {
 	public String fieldName;
 	public String type;
 	public String count;
 	public String comment;
+	public String fieldNa;
+	public String methodStr;
+	public String getMethodStr() {
+		return methodStr;
+	}
+	public void setMethodStr(String methodStr) {
+		this.methodStr = methodStr;
+	}
+	public String getFieldNa() {
+		return fieldNa;
+	}
+	public void setFieldNa(String fieldNa) {
+		this.fieldNa = comment;
+	}
 	public String getComment() {
 		return comment;
 	}
@@ -28,6 +44,13 @@ public class ErayBean {
 	}
 	public void setCount(String count) {
 		this.count = count.trim();
+	}
+	public ArrayList<LogicVO> voLogic;
+	public ArrayList<LogicVO> getVoLogic() {
+		return voLogic;
+	}
+	public void setVoLogic(ArrayList<LogicVO> voLogic) {
+		this.voLogic = voLogic;
 	}
 	
 

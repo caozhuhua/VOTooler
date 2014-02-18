@@ -3,15 +3,50 @@ package com.eray;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
+import com.eray.vo.SheetVO;
+
 
 public class ExcelUtils {
+
+	public static ArrayList<LogicVO> praseVOLogic(String voLogic){
+		ArrayList<LogicVO> list = new ArrayList<LogicVO> ();
+		voLogic = voLogic.trim();
+		if("".equals(voLogic)){
+			return list;
+		}
+		String [] strList = voLogic.split(";");
+		for(int i = 0;i<strList.length;++i){
+			String itemStr = strList[i];
+			String [] typeList = itemStr.split(":");
+			if(typeList.length==2){
+				LogicVO logicVO = new LogicVO();
+				String type = typeList[0];
+				logicVO.setVoType(type);
+				String [] numList = typeList[1].split(",");
+				if(numList.length==2){
+					logicVO.setNum(numList[0]);
+					logicVO.setObjType(numList[1]);
+					list.add(logicVO);
+				}else{
+					System.out.println( typeList[1]+"异常了");
+				}
+			}else{
+				System.out.println(itemStr+"异常了");
+			}
+		}
+		return list;
+	}
+	
 	public static String[] getSheetName(String path) throws IOException {
 		// 找到文件
 		InputStream inp = new FileInputStream(path);
@@ -88,4 +123,27 @@ public class ExcelUtils {
 			return data;
 		}
 	}
+	public static String lowerCaseFirstLetter(String originalLeter){
+		return originalLeter.substring(0, 1).toLowerCase()+ originalLeter.substring(1);
+	}
+	public static ArrayList<SheetVO> getSheetList(List<String> listFiles) throws IOException{
+		ArrayList<SheetVO> list = new ArrayList<SheetVO>();
+		for (String s : listFiles) {
+			if (FilenameUtils.isExtension(s, "xls")) {
+				String xlsName = FilenameUtils.getBaseName(s);
+				String[] sheets = ExcelUtils.getSheetName(s);
+				for(int i = 0;i<sheets.length;++i){
+					SheetVO vo = new SheetVO();
+					vo.setExcelName(xlsName);
+					vo.setSheetName(sheets[i]);
+					vo.setExcelNativePath(s);
+					list.add(vo);
+				}
+			
+			}
+		}
+		return list;
+	}
+	
+	
 }
