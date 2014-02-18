@@ -52,7 +52,11 @@ package com.eray.base.net.socket.vo
 		<#elseif field.type == "Number">
 			vo.${field.fieldName} =  ba.getLong();
 		<#elseif field.type == "String">
+			<#if field.countType == "1">
 			vo.${field.fieldName} =  Utilities.UnicodeToString(ba,vo.${field.count}/2)
+			<#else>
+			o.${field.fieldName} =  Utilities.UnicodeToString(ba,${field.count}/2)
+			</#if>
 		<#elseif field.type == "Object">
 			<#list field.voLogic as fd>
 			__type = ba.readUnsignedInt();
@@ -71,14 +75,46 @@ package com.eray.base.net.socket.vo
 		<#else>
 		<#if field.count != "">
 			vo.${field.fieldName} = [];
+			<#if field.countType == "1">
 			for(i=0;i<vo.${field.count};++i){
+			<#else>
+			for(i=0;i<${field.count};++i){
+			</#if>
 				vo.${field.fieldName}.push(${field.type}.parse(ba));
 			}
+		<#else>
+			vo.${field.fieldName} = ${field.type}.parse(ba);
 		</#if>
 	</#if>
 </#list>
 			return vo;
 		}
-	
+		public function toByteArray():ByteArray{
+			var i:int;
+			var ba:ByteArray = new ByteArray();
+<#list FieldList as field>
+	<#if field.type == "int">
+			ba.writeUnsignedInt(this.${field.fieldName});
+	<#elseif field.type == "Number">
+			ba.putLong(this.${field.fieldName});
+	<#elseif field.type == "String">
+			Utilities.StringToUnicode(ba, this.${field.fieldName}, ${field.count});
+	<#elseif field.type == "Object">
+		<#list field.voLogic as fd>
+		</#list>
+	<#else>
+		<#if field.count != "">
+			<#if field.countType == "1">
+			ba.writeUnsignedInt(${field.count});
+			<#else>
+			</#if>
+			for(i=0;i<${field.count};++i){
+				ba.writeBytes(${field.fieldName}[i].toByteArray());
+			}
+		</#if>
+	</#if>
+</#list>
+			return ba;
+		}
 	}
 }

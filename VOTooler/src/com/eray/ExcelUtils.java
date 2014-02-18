@@ -59,6 +59,12 @@ public class ExcelUtils {
 		}
 		return sheetName;
 	}
+	public final static boolean isNumeric(String s) {  
+        if (s != null && !"".equals(s.trim()))  
+            return s.matches("^[0-9]*$");  
+        else  
+            return false;  
+    }  
 	public static String[][] getSheetData(String xlsPath, String sheetName) throws Exception{
 		InputStream inp = new FileInputStream(xlsPath);
 		HSSFWorkbook workbook = new HSSFWorkbook(new POIFSFileSystem(inp));

@@ -52,7 +52,14 @@ public class ErayBean {
 	public void setVoLogic(ArrayList<LogicVO> voLogic) {
 		this.voLogic = voLogic;
 	}
-	
+	//1,¶¯Ì¬£¬2£¬¹Ì¶¨
+	public String countType="";
+	public String getCountType() {
+		return countType;
+	}
+	public void setCountType(String countType) {
+		this.countType = countType;
+	}
 
 
 }

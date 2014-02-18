@@ -59,6 +59,10 @@ public class VOUtils {
 					ActionHandler = data[i][j];
 				}else if(SheetDataItemLabel.MESSAGE_ID_STR_KEY.equalsIgnoreCase(typeName)){
 					MessageIDStr = data[i][j];
+				}else if(SheetDataItemLabel.MESSAGE_ID_STR_TYPE.equalsIgnoreCase(typeName)){
+					bb.setMessageType(data[i][j]);
+				}else if(SheetDataItemLabel.MESSAGE_ID_STR_COMMENT.equalsIgnoreCase(typeName)){
+					bb.setComment(data[i][j]);
 				}
 				
 			}

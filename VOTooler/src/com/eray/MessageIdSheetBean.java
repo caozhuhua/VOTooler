@@ -21,13 +21,27 @@ public class MessageIdSheetBean {
 		return actionHandler;
 	}
 	public void setActionHandler(String actionHandler) {
-		this.actionHandler = actionHandler;
+		this.actionHandler = actionHandler.trim();
 	}
 	public String getMessageIDStr() {
 		return messageIDStr;
 	}
 	public void setMessageIDStr(String messageIDStr) {
 		this.messageIDStr = messageIDStr;
+	}
+	public String messageType;
+	public String comment;
+	public String getMessageType() {
+		return messageType;
+	}
+	public void setMessageType(String messageType) {
+		this.messageType = messageType.trim();
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment.trim();
 	}
 	
 }

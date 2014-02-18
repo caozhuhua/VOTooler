@@ -6,6 +6,8 @@ public class SheetDataItemLabel {
 	public static final String MESSAGE_ID_VO_NAME ="MessageVO";
 	public static final String MESSAGE_ID_HANDLER ="ActionHandler";
 	public static final String MESSAGE_ID_STR_KEY ="MessageIDStr";
+	public static final String MESSAGE_ID_STR_TYPE ="MessageType";
+	public static final String MESSAGE_ID_STR_COMMENT ="Comment";
 	
 	
 	public static final String SHEET_ITEM_TYPE = "Type";

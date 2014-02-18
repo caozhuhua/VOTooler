@@ -29,6 +29,7 @@ public class FreeMarkerHelper {
 			ErayBean b = new ErayBean();
 			Boolean isInBaseType = true;
 			String type = "";
+			Boolean isNum = false;
 			for (int j = 0; j < valueList.length; j++) {
 				String typeName = valueList[j];
 				if(SheetDataItemLabel.SHEET_ITEM_NAME.equalsIgnoreCase(typeName)){
@@ -43,12 +44,19 @@ public class FreeMarkerHelper {
 					String countString = data[i][j];
 					if(!"".equals(countString)){
 						ErayBean countBean = new ErayBean();
+						isNum = ExcelUtils.isNumeric(countString);
+						
 						countBean.setFieldName(countString);
 						b.setFieldNa(ExcelUtils.lowerCaseFirstLetter(countString));
 						countBean.setType(SheetDataItemLabel.FIELD_TYPE_INT);
 						countBean.setComment("¸öÊý");
 						countBean.setCount("");
-						fieldList.add(countBean);
+						if(isNum){
+							countBean.setCountType("2");
+						}else{
+							countBean.setCountType("1");
+							fieldList.add(countBean);
+						}
 					}
 					b.setCount(countString);
 				}else if(SheetDataItemLabel.SHEET_ITEM_COMMENT.equalsIgnoreCase(typeName)){
@@ -63,6 +71,11 @@ public class FreeMarkerHelper {
 					}
 					b.setVoLogic(logicVOList);
 				}
+			}
+			if(isNum){
+				b.setCountType("2");
+			}else{
+				b.setCountType("1");
 			}
 			if(!isInBaseType){
 				IncludeFileBean bb = new IncludeFileBean();
