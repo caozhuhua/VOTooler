@@ -111,8 +111,10 @@ package com.eray.base.net.socket.vo
 		<#if field.count != "">
 			vo.${field.fieldName} = [];
 			<#if field.countType == "1">
+			//dynamic length
 			for(i=0;i<vo.${field.count};++i){
 			<#else>
+			//fix length
 			for(i=0;i<${field.count};++i){
 			</#if>
 				vo.${field.fieldName}.push(${field.type}.parse(ba));
