@@ -62,6 +62,7 @@ public class FreeMarkerHelper {
 				}else if(SheetDataItemLabel.SHEET_ITEM_COMMENT.equalsIgnoreCase(typeName)){
 					b.setComment(data[i][j]);
 				}else if(SheetDataItemLabel.SHEET_ITEM_VO_LOGIC.equalsIgnoreCase(typeName)){
+					b.setVoLogicStr(data[i][j]);
 					ArrayList<LogicVO> logicVOList = ExcelUtils.praseVOLogic(data[i][j]);
 					for(int k = 0;k<logicVOList.size();++k){
 						LogicVO logicVO = logicVOList.get(k);

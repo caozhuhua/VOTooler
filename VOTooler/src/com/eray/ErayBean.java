@@ -60,6 +60,12 @@ public class ErayBean {
 	public void setCountType(String countType) {
 		this.countType = countType;
 	}
-
+	public String voLogicStr;
+	public String getVoLogicStr() {
+		return voLogicStr;
+	}
+	public void setVoLogicStr(String voLogicStr) {
+		this.voLogicStr = voLogicStr;
+	}
 
 }
