@@ -20,7 +20,6 @@ import freemarker.template.Template;
 
 
 public class FreeMarkerHelper {
-	private static final String AS_FOLDER = "as3";
 	public static void createAS3VO(String configExcelPath,String classNameString,String[][] data,String outPutBasePath) throws Exception{
 		ArrayList<ErayBean> fieldList = new ArrayList<ErayBean>();
 		ArrayList<IncludeFileBean> typeList = new ArrayList<IncludeFileBean>();
@@ -89,14 +88,17 @@ public class FreeMarkerHelper {
 				if(sheetVO!=null){
 					String[][] voData = ExcelUtils.getSheetData(sheetVO.getExcelNativePath(), b.getType());
 					FreeMarkerHelper.createAS3VO(sheetVO.getExcelNativePath(), b.getType(), voData, outPutBasePath);
-					typeList.add(bb);
+					if(!ExcelUtils.isInList(typeList, bb)){
+						typeList.add(bb);
+					}
 				}
 			}
 			fieldList.add(b);
 		}
-		String defaultPackageString = "com.eray.base.net.socket.vo";
-		String packageFolder = defaultPackageString.replace(".", "\\")+"\\";
-		File asFile = new File(outPutBasePath+"DataVO\\"+AS_FOLDER+"\\"+packageFolder+classNameString+".as");
+		String defaultPackageString = SheetDataItemLabel.AS_DEFAULT_PACKAGE;
+		String packageFolder = defaultPackageString.replace(".", SheetDataItemLabel.LINE_GAP)+SheetDataItemLabel.LINE_GAP;
+		String asFileFolder = outPutBasePath+SheetDataItemLabel.PARENT_FOLDER+SheetDataItemLabel.LINE_GAP+SheetDataItemLabel.AS_FILE_FOLDER+SheetDataItemLabel.LINE_GAP+packageFolder;
+		File asFile = new File(asFileFolder+classNameString+".as");
 		if(asFile.exists()){
 			System.out.println(classNameString+" 已经生成过了");
 		}else{
@@ -106,7 +108,7 @@ public class FreeMarkerHelper {
 				freemarkerCfg.setEncoding(Locale.getDefault(), "gb2312");
 				Template template;
 				try{
-					template = freemarkerCfg.getTemplate("as3.ftl",Locale.ENGLISH);
+					template = freemarkerCfg.getTemplate(SheetDataItemLabel.AS_CLASS_FILE_TEMPLATE,Locale.ENGLISH);
 					template.setEncoding("UTF-8");
 					HashMap<Object, Object> root = new HashMap<Object, Object>();
 					root.put("ClassName", classNameString);
@@ -115,12 +117,12 @@ public class FreeMarkerHelper {
 					Writer writer;
 					try{
 						
-						File asDic = new File(outPutBasePath+"DataVO\\"+AS_FOLDER+"\\"+packageFolder);
+						File asDic = new File(asFileFolder);
 						if(!asDic.exists()){
 							asDic.mkdirs();
 						}
 						writer = new BufferedWriter(new OutputStreamWriter(
-						new FileOutputStream(outPutBasePath+"DataVO\\"+AS_FOLDER+"\\"+packageFolder+classNameString+".as"), "UTF-8"));
+						new FileOutputStream(asFileFolder+classNameString+".as"), "UTF-8"));
 						template.process(root, writer);
 						writer.flush();
 						writer.close();
@@ -209,7 +211,7 @@ public class FreeMarkerHelper {
 			freemarkerCfg.setEncoding(Locale.getDefault(), "gb2312");
 			Template template;
 			try{
-				template = freemarkerCfg.getTemplate("CADD.ftl",Locale.ENGLISH);
+				template = freemarkerCfg.getTemplate(SheetDataItemLabel.C_CLASS_FILE_TEMPLATE,Locale.ENGLISH);
 				template.setEncoding("UTF-8");
 				HashMap<Object, Object> root = new HashMap<Object, Object>();
 				root.put("ClassName", icv.classStr);
@@ -218,13 +220,14 @@ public class FreeMarkerHelper {
 				root.put("ICV", icv);
 				Writer writer;
 				try{
-					String packageFolder = defaultPackageString.replace(".", "\\")+"\\";
-					File asDic = new File(basePath+"DataVO\\c\\"+packageFolder);
+					String packageFolder = defaultPackageString.replace(".", SheetDataItemLabel.LINE_GAP)+SheetDataItemLabel.LINE_GAP;
+					String cFolder = basePath+SheetDataItemLabel.PARENT_FOLDER+SheetDataItemLabel.LINE_GAP+SheetDataItemLabel.C_FILE_FOLDER+SheetDataItemLabel.LINE_GAP+packageFolder;
+					File asDic = new File(cFolder);
 					if(!asDic.exists()){
 						asDic.mkdirs();
 					}
 					writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(basePath+"DataVO\\c\\"+packageFolder+icv.classStr+".h"), "UTF-8"));
+					new FileOutputStream(basePath+cFolder+icv.classStr+".h"), "UTF-8"));
 					template.process(root, writer);
 					writer.flush();
 					writer.close();
@@ -250,20 +253,21 @@ public class FreeMarkerHelper {
 			freemarkerCfg.setEncoding(Locale.getDefault(), "gb2312");
 			Template template;
 			try{
-				template = freemarkerCfg.getTemplate("MessageId.ftl",Locale.ENGLISH);
+				template = freemarkerCfg.getTemplate(SheetDataItemLabel.C_DELEGATE_CLASS_FILE_TEMPLATE,Locale.ENGLISH);
 				template.setEncoding("UTF-8");
 				HashMap<Object, Object> root = new HashMap<Object, Object>();
 				root.put("ClassName", classNameStr);
 				root.put("FieldList", fieldList);
 				Writer writer;
 				try{
-					String packageFolder = defaultPackageString.replace(".", "\\")+"\\";
-					File asDic = new File(basePath+"DataVO\\c\\"+packageFolder);
+					String packageFolder = defaultPackageString.replace(".", SheetDataItemLabel.LINE_GAP)+SheetDataItemLabel.LINE_GAP;
+					String cFolder = basePath+SheetDataItemLabel.PARENT_FOLDER+SheetDataItemLabel.LINE_GAP+SheetDataItemLabel.C_FILE_FOLDER+SheetDataItemLabel.LINE_GAP+packageFolder;
+					File asDic = new File(cFolder);
 					if(!asDic.exists()){
 						asDic.mkdirs();
 					}
 					writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(basePath+"DataVO\\c\\"+packageFolder+classNameStr+".h"), "UTF-8"));
+					new FileOutputStream(cFolder+classNameStr+".h"), "UTF-8"));
 					template.process(root, writer);
 					writer.flush();
 					writer.close();
@@ -283,26 +287,27 @@ public class FreeMarkerHelper {
 		try{
 			String basePath = itvo.outPutPath;
 			String classNameStr = "ErayMessageManager";
-			String defaultPackageString = "com.eray.base.net.socket";
+			String defaultPackageString = SheetDataItemLabel.AS_MANAGER_PACKAGE;
 			Configuration freemarkerCfg = FreemarkerConfiguration.getConfiguation();
 			freemarkerCfg.setDirectoryForTemplateLoading(new File("./"));
 			freemarkerCfg.setEncoding(Locale.getDefault(), "gb2312");
 			Template template;
 			try{
-				template = freemarkerCfg.getTemplate("AS3MessageManager.ftl",Locale.ENGLISH);
+				template = freemarkerCfg.getTemplate(SheetDataItemLabel.AS_CLASS_MANAGER_FILE_TEMPLATE,Locale.ENGLISH);
 				template.setEncoding("UTF-8");
 				HashMap<Object, Object> root = new HashMap<Object, Object>();
 				root.put("ClassName", classNameStr);
 				root.put("FieldList", fieldList);
 				Writer writer;
 				try{
-					String packageFolder = defaultPackageString.replace(".", "\\")+"\\";
-					File asDic = new File(basePath+"DataVO\\"+AS_FOLDER+"\\"+packageFolder);
+					String packageFolder = defaultPackageString.replace(".", SheetDataItemLabel.LINE_GAP)+SheetDataItemLabel.LINE_GAP;
+					String asFolder = basePath+SheetDataItemLabel.PARENT_FOLDER+SheetDataItemLabel.LINE_GAP+SheetDataItemLabel.AS_FILE_FOLDER+SheetDataItemLabel.LINE_GAP+packageFolder;
+					File asDic = new File(asFolder);
 					if(!asDic.exists()){
 						asDic.mkdirs();
 					}
 					writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(basePath+"DataVO\\"+AS_FOLDER+"\\"+packageFolder+classNameStr+".as"), "UTF-8"));
+					new FileOutputStream(asFolder+classNameStr+".as"), "UTF-8"));
 					template.process(root, writer);
 					writer.flush();
 					writer.close();

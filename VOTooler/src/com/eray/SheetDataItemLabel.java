@@ -25,4 +25,18 @@ public class SheetDataItemLabel {
 	public static final String FIELD_TYPE_NUMBER = "Number";
 	public static final String FIELD_TYPE_STRING = "String";
 	public static final String FIELD_TYPE_OBJECT = "Object";
+	
+	
+	public static final String AS_DEFAULT_PACKAGE = "com.eray.base.net.socket.vo";
+	public static final String AS_MANAGER_PACKAGE = "com.eray.base.net.socket";
+	public static final String C_DEFAULT_PACKAGE = "ERAY.OMG";
+	public static final String AS_FILE_FOLDER = "as3";
+	public static final String C_FILE_FOLDER = "";
+	public static final String LINE_GAP = "\\";
+	public static final String PARENT_FOLDER = "DataVO";
+	public static final String AS_CLASS_FILE_TEMPLATE = "as3.ftl";
+	public static final String AS_CLASS_MANAGER_FILE_TEMPLATE = "AS3MessageManager.ftl";
+	
+	public static final String C_CLASS_FILE_TEMPLATE = "CADD.ftl";
+	public static final String C_DELEGATE_CLASS_FILE_TEMPLATE = "MessageId.ftl";
 }

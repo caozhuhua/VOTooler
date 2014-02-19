@@ -129,6 +129,15 @@ public class ExcelUtils {
 			return data;
 		}
 	}
+	public static Boolean isInList(ArrayList<IncludeFileBean> list,IncludeFileBean obj){
+		for(int i = 0;i<list.size();++i){
+			IncludeFileBean o = list.get(i);
+			if(o.includeFileName.equals(obj.includeFileName)){
+				return true;
+			}
+		}
+		return false;
+	}
 	public static String lowerCaseFirstLetter(String originalLeter){
 		return originalLeter.substring(0, 1).toLowerCase()+ originalLeter.substring(1);
 	}
